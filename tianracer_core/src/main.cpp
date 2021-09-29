@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
-#include "tianboard.h"
+#include "tianboard.hpp"
 #include <std_msgs/msg/string.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +11,8 @@ int main(int argc, char *argv[])
     rclcpp::Rate loop_rate(10);
     while (rclcpp::ok())
     {
-        rclcpp::spin_some(node);
+        std::cout << "temp" << std::endl;
+        // rclcpp::spin_some(node);
         loop_rate.sleep();
     }
     return 0;

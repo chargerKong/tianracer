@@ -1,4 +1,4 @@
-#include "tianboard.h"
+#include "tianboard.hpp"
 #include "protocol.h"
 #include <vector>
 
@@ -121,7 +121,10 @@ void Tianboard::serialDataProc(uint8_t *data, unsigned int data_len)
         }
     }
 }
+void Tianboard::tianboardDataProc(unsigned char *buf, int len)
+{
 
+}
 // void Tianboard::tianboardDataProc(unsigned char *buf, int len)
 // {
 //     struct protocol_pack *p = (struct protocol_pack *)buf;
@@ -253,8 +256,8 @@ void Tianboard::serialDataProc(uint8_t *data, unsigned int data_len)
 //     heart_timer_.start();
 // }
 
-// void Tianboard::ackermannCallback(const ackermann_msgs::AckermannDrive::ConstPtr &msg)
-// {
+void Tianboard::ackermannCallback(const ackermann_msgs::msg::AckermannDrive& msg)
+{
 //     uint16_t len;
 //     vector<uint8_t> buf;
 
@@ -291,49 +294,49 @@ void Tianboard::serialDataProc(uint8_t *data, unsigned int data_len)
 //     serial_.send(&buf[0], buf.size());
 //     heart_timer_.stop();
 //     heart_timer_.start();
-// }
+}
 
 
-// void Tianboard::heartCallback()
-// {
-//     uint16_t len;
-//     vector<uint8_t> buf;
-//     uint16_t dummy = 0;
-//     uint8_t bcc = 0;
-//     int i;
-//     uint8_t *out = (uint8_t *)&dummy;
-//     buf.push_back(PROTOCOL_HEAD & 0xFF);
-//     buf.push_back((PROTOCOL_HEAD >> 8) & 0xFF);
+void Tianboard::heartCallback()
+{
+    uint16_t len;
+    vector<uint8_t> buf;
+    uint16_t dummy = 0;
+    uint8_t bcc = 0;
+    int i;
+    uint8_t *out = (uint8_t *)&dummy;
+    buf.push_back(PROTOCOL_HEAD & 0xFF);
+    buf.push_back((PROTOCOL_HEAD >> 8) & 0xFF);
 
-//     len = 2 + sizeof(dummy);
+    len = 2 + sizeof(dummy);
 
-//     buf.push_back(len & 0xFF);
-//     buf.push_back((len >> 8) & 0xFF);
+    buf.push_back(len & 0xFF);
+    buf.push_back((len >> 8) & 0xFF);
 
-//     buf.push_back(PACK_TYPE_HEART_BEAT & 0xFF);
-//     buf.push_back((PACK_TYPE_HEART_BEAT >> 8) & 0xFF);
+    buf.push_back(PACK_TYPE_HEART_BEAT & 0xFF);
+    buf.push_back((PACK_TYPE_HEART_BEAT >> 8) & 0xFF);
 
-//     for (i = 0; i < sizeof(dummy); i++)
-//     {
-//         buf.push_back(out[i]);
-//     }
+    for (i = 0; i < sizeof(dummy); i++)
+    {
+        buf.push_back(out[i]);
+    }
 
-//     for (i = 4; i < buf.size(); i++)
-//     {
-//         bcc ^= buf[i];
-//     }
+    for (i = 4; i < buf.size(); i++)
+    {
+        bcc ^= buf[i];
+    }
 
-//     buf.push_back(bcc);
+    buf.push_back(bcc);
 
-//     serial_.send(&buf[0], buf.size());
-//     heart_timer_.stop();
-//     heart_timer_.start();
-// }
+    serial_.send(&buf[0], buf.size());
+    heart_timer_.reset();
+    // heart_timer_.start();
+}
 
-// void Tianboard::communicationErrorCallback()
-// {
-//     ROS_ERROR_THROTTLE(5, "Communication with base error");
-// }
+void Tianboard::communicationErrorCallback()
+{
+    // ROS_ERROR_THROTTLE(5, "Communication with base error");
+}
 
 Tianboard::Tianboard(): Node("tianracer")
 {
@@ -345,18 +348,18 @@ Tianboard::Tianboard(): Node("tianracer")
     odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("odom", qos);
     imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", qos);
     uwb_pub_ = this->create_publisher<geometry_msgs::msg::Pose2D>("uwb", qos);
-    //cmd_vel_sub_ = nh_.subscribe("cmd_vel", 1, &Tianboard::velocityCallback, this);
-    ackermann_sub_ = this->create_subscription<ackermann_msgs::msg::AckermannDrive>(
-        "ackermann_cmd", \
-         rclcpp::SensorDataQoS(), \
-         std::bind(
-             &Tianboard::ackermannCallback, \
-             this, \
-             std::placeholders::_1));
+    // cmd_vel_sub_ = nh_.subscribe("cmd_vel", 1, &Tianboard::velocityCallback, this);
+    // ackermann_sub_ = this->create_subscription<ackermann_msgs::msg::AckermannDrive>(
+    //     "ackermann_cmd", 
+    //      rclcpp::SensorDataQoS(), 
+    //      std::bind(
+    //          &Tianboard::ackermannCallback, 
+    //          this, 
+    //          std::placeholders::_1));
     heart_timer_ = this->create_wall_timer(200ms, std::bind(&Tianboard::heartCallback, this));
-    // heart_timer_.start();
-    communication_timer_ = this->create_wall_timer(200ms, std::bind(&Tianboard::communicationErrorCallback, this);
-    // communication_timer_.start();
+    
+    communication_timer_ = this->create_wall_timer(200ms, std::bind(&Tianboard::communicationErrorCallback, this));
+    
     odom_tf_.header.frame_id = "odom";
     odom_tf_.child_frame_id = "base_footprint";
 

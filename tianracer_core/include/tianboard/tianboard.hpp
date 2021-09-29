@@ -3,7 +3,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include "serial.h"
-#include "geometry_msgs/msg/twist.hpp"
+#include <geometry_msgs/msg/twist.hpp>
 #include "geometry_msgs/msg/pose2_d.hpp"
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include "boost/bind.hpp"
@@ -23,7 +23,7 @@ using namespace boost;
 class Tianboard: public rclcpp::Node {
 public:
     Tianboard();
-    ~Tianboard();
+    ~Tianboard(){};
 private:
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
     rclcpp::Publisher<geometry_msgs::msg::Pose2D>::SharedPtr uwb_pub_;
@@ -37,7 +37,7 @@ private:
     rclcpp::Node::SharedPtr nh_;
     Serial serial_;
     void velocityCallback(const geometry_msgs::msg::Twist::SharedPtr& msg);
-    void ackermannCallback(const ackermann_msgs::msg::AckermannDrive::SharedPtr& msg);
+    void ackermannCallback(const ackermann_msgs::msg::AckermannDrive& msg);
     void serialDataProc(uint8_t *data, unsigned int data_len);
     void tianboardDataProc(unsigned char *buf, int len);
     void heartCallback();
