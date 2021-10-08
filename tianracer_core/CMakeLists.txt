@@ -1,68 +1,3 @@
-# cmake_minimum_required(VERSION 3.5)
-# project(tianracer_core)
-
-# if(NOT CMAKE_CXX_STANDARD)
-#   set(CMAKE_CXX_STANDARD 14)
-# endif()
-# if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   add_compile_options(-Wall -Wextra -Wpedantic)
-# endif()
-
-# find_package(ament_cmake REQUIRED)
-# find_package(rclcpp REQUIRED)
-# find_package(std_msgs REQUIRED)
-# find_package(geometry_msgs REQUIRED)
-# find_package(tf2_ros REQUIRED)
-# find_package(ackermann_msgs REQUIRED)
-# find_package(nav_msgs)
-# find_package(tf2_geometry_msgs)
-# find_package(sensor_msgs REQUIRED)
-
-
-# include_directories(
-#   include/tianboard
-# )
-# set(dependencies
-#   "geometry_msgs"
-#   "rclcpp"
-#   "std_msgs"
-#   "tf2_ros"
-#   "nav_msgs"
-#   "tf2_geometry_msgs"
-#   "sensor_msgs"
-# )
-
-# # add_library(${PROJECT_NAME}_lib SHARED src/tianboard.cpp)
-# # target_link_libraries(${PROJECT_NAME}_lib)
-# # ament_target_dependencies(${PROJECT_NAME}_lib
-# # ${dependencies}
-# # )
-
-# add_executable(${PROJECT_NAME}_node src/tianboard.cpp src/serial.cpp src/main.cpp)
-# # target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME}_lib pthread)
-# target_link_libraries(${PROJECT_NAME}_node pthread)
-
-# ament_target_dependencies(${PROJECT_NAME}_node
-# ${dependencies}
-# )
-
-
-
-
-# # target_link_libraries(${PROJECT_NAME}_node tian_core)
-
-# install(
-#   DIRECTORY include
-#   DESTINATION share/${PROJECT_NAME}
-# )
-
-# install(
-#   TARGETS ${PROJECT_NAME}_node
-#   DESTINATION lib/${PROJECT_NAME}
-# )
-
-# ament_export_include_directories(include)
-# ament_package()
 cmake_minimum_required(VERSION 3.5)
 project(tianracer_core)
 
@@ -95,25 +30,27 @@ find_package(nav_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-set(dependencies
-  geometry_msgs
-  rclcpp
-  std_msgs
-  ackermann_msgs
-  tf2_ros
-  nav_msgs
-  tf2_geometry_msgs
-  sensor_msgs
+add_library(${PROJECT_NAME}_lib src/tianboard.cpp src/serial.cpp)
+set(DEPENDENCIES
+  "std_msgs"
+  "rclcpp"
+  "ackermann_msgs"
+  "geometry_msgs"
+  "nav_msgs"
+  "sensor_msgs"
+  "tf2_ros"
+  "tf2_geometry_msgs"
 )
+ament_target_dependencies(${PROJECT_NAME}_lib ${DEPENDENCIES})
 
-add_executable(${PROJECT_NAME}_node src/main.cpp src/tianboard.cpp src/serial.cpp)
+add_executable(${PROJECT_NAME}_node src/main.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME}_lib)
 target_link_libraries(${PROJECT_NAME}_node pthread)
+ament_target_dependencies(${PROJECT_NAME}_node ${DEPENDENCIES})
 
-ament_target_dependencies(${PROJECT_NAME}_node ${dependencies})
-
-install(TARGETS
-    ${PROJECT_NAME}_node
-    DESTINATION lib/${PROJECT_NAME}
+install(
+  TARGETS ${PROJECT_NAME}_node
+  DESTINATION lib/${PROJECT_NAME}_lib
 )
 
 install(DIRECTORY include
