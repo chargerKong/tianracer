@@ -6,7 +6,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
-from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 
 
@@ -62,10 +61,10 @@ def generate_launch_description():
             node_executable="scan_to_scan_filter_chain",
             name="scan_to_scan_filter_chain",
             parameters=[
-                PathJoinSubstitution([
+                os.path.join(
                     get_package_share_directory("tianracer_bringup"),
                     "param", "tianbot_laser_config.yaml"
-                ])
+                )
             ],
             remappings=[('scan', 'scan_raw'),
                         ('scan_filtered', 'scan'),]
