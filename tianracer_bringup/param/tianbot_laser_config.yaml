@@ -1,6 +1,6 @@
 scan_to_scan_filter_chain:
   ros__parameters:
-   filter1:
+    filter1:
       name: box
       type: laser_filters/LaserScanBoxFilter
       params:
@@ -20,3 +20,4 @@ scan_to_scan_filter_chain:
         max_range: 2.0
         max_range_difference: 0.1
         filter_window: 2
+
