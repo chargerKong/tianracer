@@ -6,7 +6,6 @@ from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition, UnlessCondition
-
 def generate_launch_description():
 
     urdf_file = os.path.join(get_package_share_directory('tianracer_description'), \
