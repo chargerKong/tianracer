@@ -50,9 +50,9 @@ install(PROGRAMS
   script/multi_goals.py
   script/wall_following.py
   DESTINATION lib/${PROJECT_NAME})
-add_executable(L1_controller_v2 src/L1_controller_v2.cpp)
+#add_executable(L1_controller_v2 src/L1_controller_v2.cpp)
 #target_link_libraries(L1_controller_v2 ${DEPENDENCIES})
-ament_target_dependencies(L1_controller_v2 ${DEPENDENCIES})
+#ament_target_dependencies(L1_controller_v2 ${DEPENDENCIES})
 
 ament_export_include_directories(include)
 ament_package()
