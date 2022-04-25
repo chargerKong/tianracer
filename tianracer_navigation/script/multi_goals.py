@@ -28,7 +28,7 @@ class MultiGoals(Node):
         self.send_goal()
 
     def send_goal(self):
-       
+        # 绕着z轴转，(0, 0, 1)只需要设置z
         self.goalMsg.pose.orientation.w = math.cos(self.goalListTheta[self.goalId] / 2)
         self.goalMsg.pose.orientation.z = math.sin(self.goalListTheta[self.goalId] / 2)
         self.goalMsg.pose.position.x = self.goalListX[self.goalId]
@@ -36,7 +36,7 @@ class MultiGoals(Node):
 
         while not self.nav_to_pose_client.wait_for_server(timeout_sec=1.0):
             self._logger.info("'NavigateToPose' action server not available, waiting...")
-
+        # 设置目标和完成回调设置
         goalMsg_nav = NavigateToPose.Goal()
         goalMsg_nav.pose = self.goalMsg
 
@@ -46,6 +46,7 @@ class MultiGoals(Node):
 
     def goal_response_callback(self, future):
         goal_handle = future.result()
+        # 目标点不可达直接return
         if not goal_handle.accepted:
             self.get_logger().info('Goal rejected :(')
             return
@@ -55,6 +56,7 @@ class MultiGoals(Node):
 
     def get_result_callback(self, future):
         status = future.result().status
+        # 到达目标点，发送第二个目标点
         if status == GoalStatus.STATUS_SUCCEEDED:
             self._logger.info("goal finish! Goal ID is: %d" % self.goalId)
             self.goalId = self.goalId + 1
@@ -91,6 +93,7 @@ class MultiGoals(Node):
 
 def main():
     rclpy.init()
+    # 利用action完成多点导航
     rclpy.spin(MultiGoals())
 
 

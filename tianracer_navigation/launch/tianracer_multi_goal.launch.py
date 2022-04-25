@@ -50,6 +50,7 @@ def launch_setup(context):
             output='screen')
     ]
 
+# 启动多点导航
 def generate_launch_description():
     return LaunchDescription([
         OpaqueFunction(function=launch_setup)

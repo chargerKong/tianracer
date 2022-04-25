@@ -6,7 +6,7 @@ from launch.substitutions import  LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition, UnlessCondition
 
-
+# 根据urdf启动小车tf
 def generate_launch_description():
 
     urdf_file = os.path.join(get_package_share_directory('tianracer_description'), \

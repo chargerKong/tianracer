@@ -4,6 +4,9 @@
 
 using namespace std;
 
+/*
+* @brief Receive and process serial data.
+*/
 void Tianboard::serialDataProc(uint8_t *data, unsigned int data_len)
 {
     static uint8_t state = 0;
@@ -123,6 +126,9 @@ void Tianboard::serialDataProc(uint8_t *data, unsigned int data_len)
     }
 }
 
+/*
+* @brief protobuf data processing, publish odom, uwb and imu; 
+*/ 
 void Tianboard::tianboardDataProc(unsigned char *buf, int len)
 {
     struct protocol_pack *p = (struct protocol_pack *)buf;
@@ -201,6 +207,9 @@ void Tianboard::tianboardDataProc(unsigned char *buf, int len)
     communication_timer_.reset();
 }
 
+/*
+* @brief Send ackermann message to serial_ for controlling car
+*/ 
 void Tianboard::ackermannCallback(const ackermann_msgs::msg::AckermannDrive::SharedPtr msg)
 {
     uint16_t len;
@@ -240,7 +249,9 @@ void Tianboard::ackermannCallback(const ackermann_msgs::msg::AckermannDrive::Sha
     // heart_timer_.reset();
 }
 
-
+/*
+* @brief init publisher
+*/ 
 void Tianboard::initPub()
 {
     auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
@@ -260,6 +271,9 @@ void Tianboard::initSub()
              std::placeholders::_1));
 }
 
+/*
+* @brief Send heart beat message every timeout if no reset
+*/ 
 void Tianboard::heartBeatTimer(const std::chrono::milliseconds timeout) 
 {
     heart_timer_ = this->create_wall_timer(timeout,
@@ -298,6 +312,9 @@ void Tianboard::heartBeatTimer(const std::chrono::milliseconds timeout)
     );
 }
 
+/*
+* @brief raise error if communication_timer_ reaches time without time reset
+*/ 
 void Tianboard::communicationTimer(const std::chrono::milliseconds timeout)
 {
     communication_timer_ = this->create_wall_timer(timeout,

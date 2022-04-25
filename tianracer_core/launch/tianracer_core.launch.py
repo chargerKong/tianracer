@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 
-
+# 发布小车的odom、 imu
 def generate_launch_description():
     pkg_share = get_package_share_directory("tianracer_core")
 
@@ -34,5 +34,4 @@ def generate_launch_description():
             description='Tianracer base port'),
         tianracer_core,
         robot_localization_node
-
     ])

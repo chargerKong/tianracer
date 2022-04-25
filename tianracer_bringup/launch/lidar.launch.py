@@ -5,7 +5,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-
+# 启动雷达
 def generate_launch_description():
     lidar = os.environ.get("TIANRACER_LIDAR", "rplidar_a1")
     model = os.environ.get("TIANRACER_LIDAR_MODEL", "a1")

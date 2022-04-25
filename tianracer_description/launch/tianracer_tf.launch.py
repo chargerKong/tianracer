@@ -7,7 +7,7 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch.actions import OpaqueFunction
 
-
+# 根据小车配置和lidar型号启动tf
 def launch_setup(context, *args, **kwargs):
     base = LaunchConfiguration("base", \
         default=os.environ.get("TIANRACER_BASE", "compact")).perform(context)

@@ -4,7 +4,8 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-
+# 启动雷达建图的所有准备
+# 发布lidar, imu, odom, tf
 def generate_launch_description():
 
     return LaunchDescription([
